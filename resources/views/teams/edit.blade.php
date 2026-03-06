@@ -1,27 +1,25 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2>Edit Team</h2>
-    </x-slot>
+    <x-tab-header
+        title="Edit Team"
+    />
+    
+    <form method="POST" action="{{ route('teams.update', $team) }}">
+        @csrf
+        @method('PUT')
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-full">
 
-    <div class="p-6 bg-white rounded shadow">
-        <form method="POST" action="{{ route('teams.update', $team) }}">
-            @csrf
-            @method('PUT')
+            <label for="name" class="label">Name</label>
+            <input type="text" name="name" id="name" value="{{ old('name', $team->name) }}" class="input w-full" required>
+            @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
 
-            <div class="mb-4">
-                <label for="name" class="block mb-1 font-medium">Name</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $team->name) }}" class="border p-2 w-full" required>
-                @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
-            </div>
+            <label for="description" class="label">Description</label>
+            <textarea name="description" id="description" class="textarea w-full">{{ old('description', $team->description) }}</textarea>
+            @error('description') <span class="text-red-500">{{ $message }}</span> @enderror
 
-            <div class="mb-4">
-                <label for="description" class="block mb-1 font-medium">Description</label>
-                <textarea name="description" id="description" class="border p-2 w-full">{{ old('description', $team->description) }}</textarea>
-                @error('description') <span class="text-red-500">{{ $message }}</span> @enderror
-            </div>
-
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update</button>
-            <a href="{{ route('teams.index') }}" class="ml-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</a>
-        </form>
-    </div>
+        </fieldset>
+        <div class="flex gap-4 mt-4 flex-row-reverse">
+            <button type="submit" class="btn btn-primary">Save Team</button>
+            <a href="{{ route('teams.index') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
 </x-app-layout>

@@ -1,26 +1,42 @@
 <x-app-layout>
-    <h1 class="text-xl font-bold mb-4">{{ isset($user) ? 'Edit User' : 'Create User' }}</h1>
+    <x-tab-header
+        title="Edit user"
+    />
 
-    <form action="{{ isset($user) ? route('users.update', $user) : route('users.store') }}" method="POST">
+    <form action="{{ route('users.update', $user) }}" method="POST">
         @csrf
-        @if(isset($user)) @method('PATCH') @endif
+        @method('PATCH')
 
-        <input type="text" name="name" disabled value="{{ old('name', $user->name ?? '') }}" placeholder="Name" required>
-        <input type="email" name="email" disabled value="{{ old('email', $user->email ?? '') }}" placeholder="Email" required>
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-full">
+            
+            <label for="name" class="label">User name</label>
+            <input type="text" name="name" id="name" value="{{ old('name'), $user->name }}" class="input w-full" placeholder="Some name" required>
+            @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
 
-        <select name="role" required>
-            @foreach($roles as $role)
-                <option value="{{ $role }}" {{ (old('role', $user->role ?? '') == $role) ? 'selected' : '' }}>{{ ucfirst($role) }}</option>
-            @endforeach
-        </select>
+            <label for="email" class="label">User email</label>
+            <input type="email" disabled name="email" id="email" value="{{ old('email'), $user->email }}" class="input w-full" placeholder="example@gmail.com" required>
+            @error('email') <span class="text-red-500">{{ $message }}</span>@enderror
 
-        <select name="team_id">
-            <option value="">No Team</option>
-            @foreach($teams as $team)
-                <option value="{{ $team->id }}" {{ (old('team_id', $user->team_id ?? '') == $team->id) ? 'selected' : '' }}>{{ $team->name }}</option>
-            @endforeach
-        </select>
+            <label for="role" class="label">Role</label>
+            <select name="role" class="select w-full" required>
+                @foreach($roles as $role)
+                    <option value="{{ $role }}" {{ (old('role', $user->role ?? '') == $role) ? 'selected' : '' }}>{{ ucfirst($role) }}</option>
+                @endforeach
+            </select>
+            @error('role') <span class="text-red-500">{{ $message }}</span>@enderror
 
-        <button type="submit" class="btn btn-primary mt-2">{{ isset($user) ? 'Update' : 'Create' }}</button>
+            <label for="team_id" class="label">Team</label>
+            <select name="team_id" class="select w-full" required>
+                @foreach($teams as $team)
+                    <option value="{{ $team->id }}" {{ (old('team_id', $user->team_id ?? '') == $team->id) ? 'selected' : '' }}>{{ $team->name }}</option>
+                @endforeach
+            </select>
+            @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
+            
+        </fieldset>
+        <div class="flex gap-4 mt-4 flex-row-reverse">
+            <button type="submit" class="btn btn-primary">Save User</button>
+            <a href="{{ route('users.index') }}" class="btn btn-outline">Cancel</a>
+        </div>
     </form>
 </x-app-layout>

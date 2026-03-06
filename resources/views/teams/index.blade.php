@@ -1,16 +1,11 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-gray-800">Teams</h2>
-    </x-slot>
-
-    <div class="p-6 bg-base-100 rounded-lg shadow-lg">
-        <!-- Create Team Button -->
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('teams.create') }}" class="btn btn-primary">
-                <span class="mr-2">+</span> Create Team
-            </a>
-        </div>
-
+    <x-tab-header
+        title="Teams"
+        actionRoute="teams.create"
+        actionLabel="Create Team"
+    />
+    <!-- tab content -->
+    <div>
         <!-- Success Message -->
         @if(session('success'))
             <div class="alert alert-success mb-4 shadow-lg">
@@ -19,14 +14,14 @@
         @endif
 
         <!-- Teams Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-200">
             <table class="table table-zebra w-full">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th class="text-center">Actions</th>
+                        <th class="w-px text-center whitespace-nowrap">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,17 +30,19 @@
                             <td>{{ $team->id }}</td>
                             <td>{{ $team->name }}</td>
                             <td>{{ $team->description }}</td>
-                            <td class="flex justify-center space-x-2">
-                                <a href="{{ route('teams.edit', $team) }}" class="btn btn-warning btn-sm">
-                                    Edit
-                                </a>
-                                <form action="{{ route('teams.destroy', $team) }}" method="POST" onsubmit="return confirm('Delete this team?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-error btn-sm">
-                                        Delete
-                                    </button>
-                                </form>
+                            <td class="whitespace-nowrap text-center">
+                                <div class="flex justify-center gap-x-2">
+                                    <a href="{{ route('teams.edit', $team) }}" class="btn btn-secondary btn-sm">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('teams.destroy', $team) }}" method="POST" onsubmit="return confirm('Delete this team?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline btn-error btn-sm">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

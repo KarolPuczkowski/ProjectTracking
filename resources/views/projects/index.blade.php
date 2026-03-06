@@ -1,16 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800">
-            Projects
-        </h2>
-    </x-slot>
-
-    <div class="p-6">
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('projects.create') }}" class="btn btn-primary">
-                <span class="mr-2">+</span> Create Project
-            </a>
-        </div>
+    <!-- tab header -->
+    <x-tab-header
+        title="Projects"
+        actionRoute="projects.create"
+        actionLabel="Create Project"
+        ability="create"
+        :abilityTarget="\App\Models\Project::class"
+    />
+    <!-- tab content -->
+    <div>
 
         <!-- Success Message -->
         @if(session('success'))
@@ -18,8 +16,8 @@
                 <div>{{ session('success') }}</div>
             </div>
         @endif
-
-        <div class="overflow-x-auto">
+        <!-- Projects table -->
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-200">
             <table class="table table-zebra w-full">
                 <thead>
                     <tr>
@@ -28,7 +26,9 @@
                         <th>Hourly rate</th>
                         <th>Status</th>
                         <th>Team</th>
-                        <th class="text-center">Actions</th>
+                        @can('create', App\Models\Project::class)
+                            <th class="w-px text-center whitespace-nowrap">Actions</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -43,18 +43,22 @@
                                 </span>
                             </td>
                             <td>{{ $project->team->name}}</td>
-                            <td class="flex justify-center space-x-2">
-                                <a href="{{ route('projects.edit', $project) }}" class="btn btn-warning btn-sm">
-                                    Edit
-                                </a>
-                                <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Delete this project?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-error btn-sm">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
+                            @can('update', $project)
+                                <td class="whitespace-nowrap text-center">
+                                    <div class="flex justify-center gap-x-2">
+                                        <a href="{{ route('projects.edit', $project) }}" class="btn btn-secondary btn-sm">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Delete this project?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline btn-error btn-sm">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            @endcan
                         </tr>
                     @empty
                         <tr>
